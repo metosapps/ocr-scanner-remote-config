@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "revision": 2,
+  "package_name": "com.chandra.ocr.offline",
+  "store": "galaxy_store",
+  "admob_app_id": "ca-app-pub-3289974964220873~9382181867",
+  "global": {
+    "maintenance_mode": false,
+    "maintenance_message": "OCR Scanner is temporarily unavailable. Please try again later."
+  },
+  "android": {
+    "galaxy_store": {
+      "min_supported_version_code": 1,
+      "latest_version_code": 7,
+      "latest_version_name": "1.2.0",
+      "update_mode": "none",
+      "update_url": "samsungapps://ProductDetail/com.chandra.ocr.offline"
+    }
+  },
+  "links": {
+    "support_email": "chennoufo11@gmail.com",
+    "privacy_policy": "https://metosapps.github.io/ocr-scanner-website/privacy.html",
+    "terms": "https://metosapps.github.io/ocr-scanner-website/terms.html",
+    "website": "https://metosapps.github.io/ocr-scanner-website/",
+    "help": "https://metosapps.github.io/ocr-scanner-website/support.html",
+    "rating": "samsungapps://ProductDetail/com.chandra.ocr.offline"
+  },
+  "features": {
+    "native_home_ad": true
+  },
+  "kill_switches": {
+    "ads_enabled": false,
+    "iap_enabled": true
+  },
+  "ads": {
+    "enabled": false,
+    "test_ads_enabled": true,
+    "production_ads_enabled": false,
+    "minimum_fullscreen_interval_seconds": 120,
+    "ad_lifetime_seconds": 3600,
+    "native": {
+      "enabled": false,
+      "unit_id": "ca-app-pub-3940256099942544/2247696110",
+      "refresh_seconds": 60
+    },
+    "app_open": {
+      "enabled": false,
+      "unit_id": "ca-app-pub-3940256099942544/9257395921",
+      "cooldown_seconds": 300,
+      "minimum_background_seconds": 30
+    },
+    "interstitial": {
+      "enabled": false,
+      "unit_id": "ca-app-pub-3940256099942544/1033173712",
+      "cooldown_seconds": 120,
+      "minimum_completed_document_exits": 3
+    }
+  }
+}
