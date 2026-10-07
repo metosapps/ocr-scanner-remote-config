@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 3,
+  "revision": 4,
   "package_name": "com.chandra.ocr.offline",
   "store": "galaxy_store",
   "admob_app_id": "ca-app-pub-3289974964220873~9382181867",
@@ -34,7 +34,7 @@
   },
   "ads": {
     "enabled": false,
-    "test_ads_enabled": true,
+    "test_ads_enabled": false,
     "production_ads_enabled": false,
     "minimum_fullscreen_interval_seconds": 120,
     "ad_lifetime_seconds": 3600,
