@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "revision": 1,
+  "revision": 2,
   "package_name": "com.chandra.ocr.offline",
   "store": "galaxy_store",
   "admob_app_id": "ca-app-pub-3289974964220873~9382181867",
@@ -11,8 +11,8 @@
   "android": {
     "galaxy_store": {
       "min_supported_version_code": 1,
-      "latest_version_code": 7,
-      "latest_version_name": "1.2.0",
+      "latest_version_code": 8,
+      "latest_version_name": "1.2.1",
       "update_mode": "none",
       "update_url": "samsungapps://ProductDetail/com.chandra.ocr.offline"
     }
@@ -41,19 +41,22 @@
     "native": {
       "enabled": true,
       "unit_id": "ca-app-pub-3940256099942544/2247696110",
-      "refresh_seconds": 60
+      "refresh_seconds": 60,
+      "production_unit_id": "ca-app-pub-3289974964220873/4604140089"
     },
     "app_open": {
       "enabled": true,
       "unit_id": "ca-app-pub-3940256099942544/9257395921",
       "cooldown_seconds": 300,
-      "minimum_background_seconds": 30
+      "minimum_background_seconds": 30,
+      "production_unit_id": "ca-app-pub-3289974964220873/5075658238"
     },
     "interstitial": {
       "enabled": true,
       "unit_id": "ca-app-pub-3940256099942544/1033173712",
       "cooldown_seconds": 120,
-      "minimum_completed_document_exits": 3
+      "minimum_completed_document_exits": 3,
+      "production_unit_id": "ca-app-pub-3289974964220873/4468408713"
     }
   }
 }

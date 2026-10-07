@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-"""Local/CI check for the isolated, demonstration-only Galaxy configuration."""
+"""Local/CI check for package-isolated Galaxy ad configuration and safe modes."""
 import json
+import re
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -21,12 +22,23 @@ def validate(path):
     assert config["package_name"] == PACKAGE and config["store"] == "galaxy_store"
     assert config["admob_app_id"] == "ca-app-pub-3289974964220873~9382181867"
     ads = config["ads"]
-    assert ads["production_ads_enabled"] is False
+    test_mode = ads.get("test_ads_enabled", False)
+    production_mode = ads.get("production_ads_enabled", False)
+    assert type(test_mode) is bool and type(production_mode) is bool
+    assert not (test_mode and production_mode), "Ambiguous ad mode"
+    production_units = []
     for placement, unit in UNITS.items():
         assert ads[placement]["unit_id"] == unit
         assert type(ads[placement]["enabled"]) is bool
-    for key in ("enabled", "test_ads_enabled"):
-        assert type(ads[key]) is bool
+        production_unit = ads[placement].get("production_unit_id", "")
+        assert type(production_unit) is str
+        valid = bool(re.fullmatch(r"ca-app-pub-3289974964220873/[0-9]{10}", production_unit)) and production_unit.rsplit("/", 1)[-1] != "0000000000"
+        assert not production_unit or valid, f"Invalid {placement} production unit"
+        assert not (production_mode and ads[placement]["enabled"]) or valid, f"Missing {placement} production unit"
+        if production_unit:
+            production_units.append(production_unit)
+    assert len(production_units) == len(set(production_units)), "Production units must be unique per format"
+    assert type(ads["enabled"]) is bool
     assert ads["native"]["refresh_seconds"] >= 60
     assert ads["app_open"]["cooldown_seconds"] >= 300
     assert ads["app_open"]["minimum_background_seconds"] >= 30
@@ -50,7 +62,10 @@ def validate(path):
     for value in config["features"].values():
         assert type(value) is bool
     assert type(config["global"]["maintenance_mode"]) is bool
-    print(f"Validated {path.name}: package={PACKAGE}, revision={config['revision']}, demo units only")
+    mode = "TEST" if test_mode else "PRODUCTION" if production_mode else "OFF"
+    if not ads["enabled"] or not config["kill_switches"]["ads_enabled"]:
+        mode = "OFF"
+    print(f"Validated {path.name}: package={PACKAGE}, revision={config['revision']}, mode={mode}")
 
 if __name__ == "__main__":
     for file in sorted(ROOT.glob("config_galaxy*.json")):
