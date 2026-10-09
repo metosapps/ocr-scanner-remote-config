@@ -38,7 +38,7 @@ Values are bounded by the compiled app. Zero count caps disable the correspondin
 | `kill_switches.ads_enabled`, `ads.enabled` | `false` | Both global switches must be true to allow ads |
 | `ads.test_ads_enabled`, `ads.production_ads_enabled` | `false`, `false` | TEST / PRODUCTION / OFF selection; never both true |
 | `ads.native.enabled`, `ads.app_open.enabled`, `ads.interstitial.enabled` | `false` | Per-format switches |
-| `ads.load_retry_seconds` | `30` | 30–300 seconds between failed-load retries |
+| `ads.load_retry_seconds` | `30` | 30–300 seconds minimum interval between load attempts, including reloads after successful ads |
 | `ads.max_fullscreen_per_session` | `5` | 0–10, shared App Open + Interstitial cap |
 | `ads.max_fullscreen_per_day` | `8` | 0–20, shared full-screen daily cap |
 | `ads.app_open.max_per_session` | `2` | 0–10 App Open shows per process session |
@@ -57,6 +57,8 @@ Values are bounded by the compiled app. Zero count caps disable the correspondin
 | `ads.ad_lifetime_seconds` | `3600` | 1–3600 seconds; loaded ads expire within one hour |
 
 Session counters live in process memory. Daily counters are stored privately on the device and use UTC calendar days; neither is uploaded as custom telemetry. Count only successful SDK shows, not loading, requests, failed shows or eligibility attempts. App Open and Interstitial each consume their own cap and the shared full-screen cap. Configuration changes do not replenish the daily budget. Native appears only on Home and remains subject to its refresh, consent, Pro, lifecycle and global/per-format gates.
+
+`load_retry_seconds` applies to every load attempt, including successful-ad reloads and Native refresh. Setting it to 300 can delay a Native refresh configured at 60 seconds; both intervals must pass before the next load.
 
 Safe local example below is a **controls fragment**, not a complete payload. Start from `config_galaxy_v2.json`, retain all required identity, unit IDs and other fields, and merge changes into it. This fragment keeps every request disabled:
 
