@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "revision": 5,
   "package_name": "com.chandra.ocr.offline",
   "store": "galaxy_store",
@@ -49,14 +49,28 @@
       "unit_id": "ca-app-pub-3940256099942544/9257395921",
       "cooldown_seconds": 300,
       "minimum_background_seconds": 30,
-      "production_unit_id": "ca-app-pub-3289974964220873/5075658238"
+      "production_unit_id": "ca-app-pub-3289974964220873/5075658238",
+      "max_per_session": 2,
+      "max_per_day": 4,
+      "minimum_session_seconds": 300,
+      "allowed_screens": [
+        "home",
+        "history",
+        "favorites"
+      ]
     },
     "interstitial": {
       "enabled": false,
       "unit_id": "ca-app-pub-3940256099942544/1033173712",
       "cooldown_seconds": 120,
       "minimum_completed_document_exits": 3,
-      "production_unit_id": "ca-app-pub-3289974964220873/4468408713"
-    }
+      "production_unit_id": "ca-app-pub-3289974964220873/4468408713",
+      "max_per_session": 3,
+      "max_per_day": 6,
+      "minimum_session_seconds": 120
+    },
+    "load_retry_seconds": 30,
+    "max_fullscreen_per_session": 5,
+    "max_fullscreen_per_day": 8
   }
 }
