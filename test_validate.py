@@ -17,18 +17,18 @@ class ConfigValidationTest(unittest.TestCase):
         for placement in UNITS:
             self.config["ads"][placement]["enabled"] = False
 
-    def test_current_endpoint_production_and_other_profiles_validate_off(self):
+    def test_current_endpoint_test_and_other_profiles_validate_off(self):
         for name in CONFIG_FILES:
             with self.subTest(name=name):
-                expected = "PRODUCTION" if name == "config_galaxy_v2.json" else "OFF"
+                expected = "TEST" if name == "config_galaxy_v2.json" else "OFF"
                 self.assertEqual(expected, validate_config(read_config(ROOT / name)))
 
-    def test_published_production_uses_only_real_ids_and_preserves_frequency_caps(self):
+    def test_published_test_selects_demo_mode_and_preserves_frequency_caps(self):
         current = read_config(ROOT / "config_galaxy_v2.json")
         self.assertTrue(current["kill_switches"]["ads_enabled"])
         self.assertTrue(current["ads"]["enabled"])
-        self.assertFalse(current["ads"]["test_ads_enabled"])
-        self.assertTrue(current["ads"]["production_ads_enabled"])
+        self.assertTrue(current["ads"]["test_ads_enabled"])
+        self.assertFalse(current["ads"]["production_ads_enabled"])
         for placement in UNITS:
             self.assertTrue(current["ads"][placement]["enabled"])
         self.assertEqual((5, 8), (current["ads"]["max_fullscreen_per_session"], current["ads"]["max_fullscreen_per_day"]))
@@ -50,7 +50,7 @@ class ConfigValidationTest(unittest.TestCase):
         legacy = read_config(ROOT / "config_galaxy.json")
         self.assertEqual(2, self.config["schema_version"])
         for config in (legacy, self.config):
-            self.assertEqual(4 if config["schema_version"] == 1 else 5, config["revision"])
+            self.assertEqual(4 if config["schema_version"] == 1 else 6, config["revision"])
             self.assertEqual("com.chandra.ocr.offline", config["package_name"])
             self.assertEqual("galaxy_store", config["store"])
             self.assertEqual("ca-app-pub-3289974964220873~9382181867", config["admob_app_id"])
