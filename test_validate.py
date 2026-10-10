@@ -10,11 +10,30 @@ from validate import CONFIG_FILES, ROOT, UNITS, ValidationError, read_config, va
 class ConfigValidationTest(unittest.TestCase):
     def setUp(self):
         self.config = read_config(ROOT / "config_galaxy_v2.json")
+        # Validation edge cases use an OFF fixture; the published profile is
+        # checked independently below so legacy clients cannot be activated.
+        self.config["kill_switches"]["ads_enabled"] = False
+        self.config["ads"].update(enabled=False, test_ads_enabled=False, production_ads_enabled=False)
+        for placement in UNITS:
+            self.config["ads"][placement]["enabled"] = False
 
-    def test_all_four_repository_configs_validate_off(self):
+    def test_current_endpoint_production_and_other_profiles_validate_off(self):
         for name in CONFIG_FILES:
             with self.subTest(name=name):
-                self.assertEqual("OFF", validate_config(read_config(ROOT / name)))
+                expected = "PRODUCTION" if name == "config_galaxy_v2.json" else "OFF"
+                self.assertEqual(expected, validate_config(read_config(ROOT / name)))
+
+    def test_published_production_uses_only_real_ids_and_preserves_frequency_caps(self):
+        current = read_config(ROOT / "config_galaxy_v2.json")
+        self.assertTrue(current["kill_switches"]["ads_enabled"])
+        self.assertTrue(current["ads"]["enabled"])
+        self.assertFalse(current["ads"]["test_ads_enabled"])
+        self.assertTrue(current["ads"]["production_ads_enabled"])
+        for placement in UNITS:
+            self.assertTrue(current["ads"][placement]["enabled"])
+        self.assertEqual((5, 8), (current["ads"]["max_fullscreen_per_session"], current["ads"]["max_fullscreen_per_day"]))
+        self.assertEqual((2, 4, 300), tuple(current["ads"]["app_open"][key] for key in ("max_per_session", "max_per_day", "minimum_session_seconds")))
+        self.assertEqual((3, 6, 120, 3), tuple(current["ads"]["interstitial"][key] for key in ("max_per_session", "max_per_day", "minimum_session_seconds", "minimum_completed_document_exits")))
 
     def test_legacy_endpoint_and_rollback_remain_entirely_off(self):
         for name in ("config_galaxy.json", "config_galaxy_ads_disabled.json"):
@@ -31,7 +50,7 @@ class ConfigValidationTest(unittest.TestCase):
         legacy = read_config(ROOT / "config_galaxy.json")
         self.assertEqual(2, self.config["schema_version"])
         for config in (legacy, self.config):
-            self.assertEqual(4, config["revision"])
+            self.assertEqual(4 if config["schema_version"] == 1 else 5, config["revision"])
             self.assertEqual("com.chandra.ocr.offline", config["package_name"])
             self.assertEqual("galaxy_store", config["store"])
             self.assertEqual("ca-app-pub-3289974964220873~9382181867", config["admob_app_id"])

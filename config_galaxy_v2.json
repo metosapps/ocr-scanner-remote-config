@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "revision": 4,
+  "revision": 5,
   "package_name": "com.chandra.ocr.offline",
   "store": "galaxy_store",
   "admob_app_id": "ca-app-pub-3289974964220873~9382181867",
@@ -29,23 +29,23 @@
     "native_home_ad": true
   },
   "kill_switches": {
-    "ads_enabled": false,
+    "ads_enabled": true,
     "iap_enabled": true
   },
   "ads": {
-    "enabled": false,
+    "enabled": true,
     "test_ads_enabled": false,
-    "production_ads_enabled": false,
+    "production_ads_enabled": true,
     "minimum_fullscreen_interval_seconds": 120,
     "ad_lifetime_seconds": 3600,
     "native": {
-      "enabled": false,
+      "enabled": true,
       "unit_id": "ca-app-pub-3940256099942544/2247696110",
       "refresh_seconds": 60,
       "production_unit_id": "ca-app-pub-3289974964220873/4604140089"
     },
     "app_open": {
-      "enabled": false,
+      "enabled": true,
       "unit_id": "ca-app-pub-3940256099942544/9257395921",
       "cooldown_seconds": 300,
       "minimum_background_seconds": 30,
@@ -60,7 +60,7 @@
       ]
     },
     "interstitial": {
-      "enabled": false,
+      "enabled": true,
       "unit_id": "ca-app-pub-3940256099942544/1033173712",
       "cooldown_seconds": 120,
       "minimum_completed_document_exits": 3,

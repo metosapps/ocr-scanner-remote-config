@@ -2,14 +2,14 @@
 
 Public configuration for **OCR Scanner – PDF & Text**, Android package `com.chandra.ocr.offline`, Galaxy Store edition. AdMob identifiers are public configuration values. No credentials, signing material, OCR documents, purchase receipts or customer data belong in this repository.
 
-## Two endpoints, all advertising OFF
+## Production enabled on the current endpoint
 
 | Client | File / endpoint | Schema | Revision | Advertising |
 | --- | --- | --- | --- | --- |
 | Earlier APKs | [config_galaxy.json](https://raw.githubusercontent.com/metosapps/ocr-scanner-remote-config/main/config_galaxy.json) | 1 | 4 | Permanently OFF under this migration strategy |
-| 1.3.1 (10) and later | [config_galaxy_v2.json](https://raw.githubusercontent.com/metosapps/ocr-scanner-remote-config/main/config_galaxy_v2.json) | 2 | 4 | OFF; contains the stronger caps |
+| 1.3.1 (10) and later | [config_galaxy_v2.json](https://raw.githubusercontent.com/metosapps/ocr-scanner-remote-config/main/config_galaxy_v2.json) | 2 | 5 | PRODUCTION; bounded Native, App Open and Interstitial |
 
-Both files set `test_ads_enabled=false`, `production_ads_enabled=false`, `ads.enabled=false`, `kill_switches.ads_enabled=false`, and every format's `enabled=false`. Maintenance is disabled. Version metadata is `latest_version_code=10`, `latest_version_name="1.3.1"`, `min_supported_version_code=1`, `update_mode="none"`. Version metadata does not prove Galaxy approval or publication and forces no update.
+On 2026-10-10 the publisher explicitly authorized production activation. The current schema-2 endpoint sets `test_ads_enabled=false`, `production_ads_enabled=true`, both global ad switches true, and all three format switches true. The schema-1 endpoint and rollback templates keep every advertising switch false. Existing frequency, session/day caps, consent, Pro and debug restrictions continue to apply. This is remote request enablement; no physical-device ad fill or Galaxy publication is established by it. Maintenance is disabled. Version metadata is `latest_version_code=10`, `latest_version_name="1.3.1"`, `min_supported_version_code=1`, `update_mode="none"`. Version metadata does not prove Galaxy approval or publication and forces no update.
 
 The separate schema-2 endpoint prevents old APKs from serving ads while ignoring new caps. Keep the schema-1 endpoint's advertising OFF. Any future authorized ad activation belongs only in `config_galaxy_v2.json`. Retaining schema 1 on the old endpoint preserves other supported remote settings for those installations. Publishing schema 2 to the old endpoint would make old clients reject the whole response.
 
@@ -19,7 +19,7 @@ The 1.3.1 client accepts legacy schema 1 with conservative defaults for missing 
 
 Manifest App ID: `ca-app-pub-3289974964220873~9382181867`. The manifest value is fixed at build time.
 
-| Format | Demo `unit_id` | Supplied `production_unit_id` (inactive) |
+| Format | Demo `unit_id` | Supplied `production_unit_id` (selected by eligible release clients) |
 | --- | --- | --- |
 | Native | `ca-app-pub-3940256099942544/2247696110` | `ca-app-pub-3289974964220873/4604140089` |
 | App Open | `ca-app-pub-3940256099942544/9257395921` | `ca-app-pub-3289974964220873/5075658238` |
@@ -27,7 +27,7 @@ Manifest App ID: `ca-app-pub-3289974964220873~9382181867`. The manifest value is
 
 IDs alone cannot enable requests. TEST uses only the exact Google demo IDs. PRODUCTION selects validated publisher IDs in a capable release; Debug blocks PRODUCTION requests. Supplied production IDs must belong to publisher `3289974964220873`, have nonzero ten-digit suffixes, and be distinct across formats. Missing production IDs for enabled production placements are invalid. Both mode flags true invalidate the complete response. Both false select OFF.
 
-Production activation requires the exact app to be live, explicit publisher authorization, configured privacy messages and current Data Safety. The current shutdown remains in effect. Test requests also contact Google services; test ads do not generate commercial revenue.
+The publisher explicitly requested this activation; store availability, published privacy messages and current Data Safety remain separate distribution/account responsibilities. AdMob readiness, demand, consent and Pro status determine whether eligible requests show ads. Test requests also contact Google services; test ads do not generate commercial revenue.
 
 ## Control keys
 
@@ -35,9 +35,9 @@ Values are bounded by the compiled app. Zero count caps disable the correspondin
 
 | Key | Prepared value | Allowed range / effect |
 | --- | --- | --- |
-| `kill_switches.ads_enabled`, `ads.enabled` | `false` | Both global switches must be true to allow ads |
-| `ads.test_ads_enabled`, `ads.production_ads_enabled` | `false`, `false` | TEST / PRODUCTION / OFF selection; never both true |
-| `ads.native.enabled`, `ads.app_open.enabled`, `ads.interstitial.enabled` | `false` | Per-format switches |
+| `kill_switches.ads_enabled`, `ads.enabled` | `true`, `true` | Both global switches must be true to allow ads |
+| `ads.test_ads_enabled`, `ads.production_ads_enabled` | `false`, `true` | TEST / PRODUCTION / OFF selection; never both true |
+| `ads.native.enabled`, `ads.app_open.enabled`, `ads.interstitial.enabled` | `true` | Per-format switches |
 | `ads.load_retry_seconds` | `30` | 30–300 seconds minimum interval between load attempts, including reloads after successful ads |
 | `ads.max_fullscreen_per_session` | `5` | 0–10, shared App Open + Interstitial cap |
 | `ads.max_fullscreen_per_day` | `8` | 0–20, shared full-screen daily cap |
@@ -104,7 +104,7 @@ The validator checks all four configurations, strict types, bounded values, sche
 | Endpoint | All-OFF rollback template | Prepared revision |
 | --- | --- | --- |
 | `config_galaxy.json` / schema 1 | `config_galaxy_ads_disabled.json` | 5 |
-| `config_galaxy_v2.json` / schema 2 | `rollback_ads_off_v2.json` | 5 |
+| `config_galaxy_v2.json` / schema 2 | `rollback_ads_off_v2.json` | 6 |
 
 To roll back, promote the matching template to its endpoint with a revision **higher than that endpoint's deployed revision**, validate, and publish. Preserve version/update/maintenance settings; do not force updates as part of an ad rollback. Set either global ad switch false to stop requests; set a format switch false to stop that placement. A fetched valid shutdown clears loaded/pending ads. Loaded ads also become invalid when the selected ID, mode or eligibility changes. Invalid JSON is not a dependable shutdown: an unexpired last-good config may remain active.
 

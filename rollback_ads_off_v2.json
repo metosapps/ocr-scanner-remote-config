@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "revision": 5,
+  "revision": 6,
   "package_name": "com.chandra.ocr.offline",
   "store": "galaxy_store",
   "admob_app_id": "ca-app-pub-3289974964220873~9382181867",
